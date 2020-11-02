@@ -10,15 +10,25 @@ function TweetBox() {
   const sendTweet = (e) => {
     e.preventDefault();
 
-    db.collection("posts").add({
-      displayName: "Drey Wesson",
-      username: "dreywesson",
-      verified: true,
-      text: tweetMessage,
-      image: tweetImage,
-      avatar: "https://source.unsplash.com/400x300/?avatar",
-    });
-
+    function addToDatabase(msg = tweetMessage, img = tweetImage) {
+      db.collection("posts").add({
+        displayName: "Drey Wesson",
+        username: "dreywesson",
+        verified: true,
+        text: `${msg}`,
+        image: `${img}`,
+        avatar: "https://source.unsplash.com/400x300/?avatar",
+      });
+    }
+    if (tweetMessage) {
+      addToDatabase();
+    } else {
+      const tweet = prompt(
+        "Message field cant be empty!",
+        "Enter your tweet message..."
+      );
+      tweet && addToDatabase(tweet);
+    }
     setTweetMessage("");
     setTweetImage("");
   };

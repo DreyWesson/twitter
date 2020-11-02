@@ -7,16 +7,18 @@ import FlipMove from "react-flip-move";
 
 function Feed() {
   const [posts, setPosts] = useState([]);
-  const [ids, setIds] = useState([]);
+
   useEffect(() => {
     db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.docs.map((doc) => doc.data()))
-    );
-    db.collection("posts").onSnapshot((snapshot) =>
-      setIds(snapshot.docs.map((doc) => doc.id))
+      setPosts(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      )
     );
   }, []);
-  console.log(ids[0]);
+
   return (
     <div className="feed">
       <div className="feed__header">
@@ -24,15 +26,15 @@ function Feed() {
       </div>
       <TweetBox />
       <FlipMove>
-        {posts.map((post, i) => (
+        {posts.map((post) => (
           <Post
-            key={ids[i]}
-            displayName={post.displayName}
-            username={post.username}
-            verified={post.verified}
-            text={post.text}
-            avatar={post.avatar}
-            image={post.image}
+            key={post.id}
+            displayName={post.data.displayName}
+            username={post.data.username}
+            verified={post.data.verified}
+            text={post.data.text}
+            avatar={post.data.avatar}
+            image={post.data.image}
           />
         ))}
       </FlipMove>
